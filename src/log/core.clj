@@ -4,19 +4,18 @@
 ; lein bin
 
 (ns log.core
-  (:gen-class))
-
-(require '[clj-time.format :as f]
-         '[clj-time.local :as l]
-         '[clojure.java.io :as io])
+  (:gen-class)
+  (require [clj-time.format :as f]
+           [clj-time.local :as l]
+           [clojure.java.io :as io]))
 
 (def date (f/unparse (f/formatter "yyyy-MM-dd") (l/local-now)))
 (def logfile (str "log/" date ".txt"))
 
 (defn log
-  "Write to log file. New file for each day"
+  "Write text to a file in the 'log' directory. New file for each day."
   [text]
-  (if (not (and (.exists (io/file "log")) (.isDirectory (io/file "log"))) )
+  (if-not (and (.exists (io/file "log")) (.isDirectory (io/file "log")))
     (.mkdir (io/file "log")))
   (spit logfile (str text "\n") :append true))
 
